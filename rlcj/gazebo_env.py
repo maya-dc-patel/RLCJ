@@ -3,6 +3,7 @@ import gymnasium as gym
 import numpy as np
 import numpy.typing as npt
 import threading
+import time
 
 import rclpy
 from rclpy.node import Node
@@ -68,9 +69,7 @@ class GazeboEnv(gym.Env, Node):
     def _check_collision(self, contacts: ContactsState) -> None:
         # Check for wall collision from node thread.
         for state in contacts.states:
-            if state.collision1_name.starts_with(
-                "drc"
-            ) or state.collision2_name.starts_with("drc"):
+            if state.collision1_name[:3] == "drc" or state.collision2_name[:3] == "drc":
                 with self._lock:
                     self._collided = True
 
@@ -82,14 +81,20 @@ class GazeboEnv(gym.Env, Node):
 
     def reset(self) -> tuple[npt.NDArray, None]:
         # Reset environment from main thread.
-        self._reset_world.call(Empty())
+        self._reset_world.call(Empty.Request())
         with self._lock:
             self._collided = False
         return self._get_obs(), None
 
-    def step(self, action: Twist) -> tuple[npt.NDArray, int, bool, bool, None]:
+    def step(self, action: tuple[float, float, float]) -> tuple[npt.NDArray, int, bool, bool, None]:
+        # Convert tuple to twist.
+        action_msg: Twist = Twist()
+        action_msg.linear.x = float(action[0])
+        action_msg.linear.y = float(action[1])
+        action_msg.angular.z = float(action[2])
+
         # Step environment from main thread.
-        self._vel_cmd.publish(action)
+        self._vel_cmd.publish(action_msg)
         reward: int = 1
         terminated: bool = False
         with self._lock:
@@ -97,3 +102,17 @@ class GazeboEnv(gym.Env, Node):
                 reward = -100
                 terminated = True
         return self._get_obs(), reward, terminated, False, None
+
+
+def main():
+    ge = GazeboEnv()
+    while True:
+        _, _, term, _, _ = ge.step((1, 0, 0))
+        print(term)
+        time.sleep(1)
+        if term:
+            ge.reset()
+
+if __name__ == "__main__":
+    main()
+
