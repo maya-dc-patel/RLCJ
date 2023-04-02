@@ -1,11 +1,12 @@
 from __future__ import annotations
+from concurrent.futures import Future
 import gymnasium as gym
 import numpy as np
 import numpy.typing as npt
 import threading
-import time
 
 import rclpy
+from rclpy.callback_groups import MutuallyExclusiveCallbackGroup
 from rclpy.node import Node
 from gazebo_msgs.msg import ContactsState
 from geometry_msgs.msg import Twist
@@ -15,9 +16,15 @@ from std_srvs.srv import Empty
 
 
 class GazeboEnv(gym.Env, Node):
-    metadata = {"render_modes": ["human"]}
-
     def __init__(self):
+        # Gym environment variables.
+        self.observation_space = gym.spaces.Box(
+            low=-np.inf, high=np.inf, shape=(733,), dtype=np.float64
+        )
+        self.action_space = gym.spaces.Box(
+            low=-2.0, high=2.0, shape=(2,), dtype=np.float32
+        )
+
         # Initialize obervation variables.
         self._odometry: npt.ndarray = np.zeros((13,))
         self._lidar: npt.ndarray = np.zeros((720,))
@@ -77,42 +84,33 @@ class GazeboEnv(gym.Env, Node):
         # Retrieve observation variables from main thread.
         with self._lock:
             obs = np.concatenate((self._odometry, self._lidar), axis=None)
+            obs[np.isinf(obs)] = 10  # Remove inf values and replace with max range.
         return obs
 
-    def reset(self) -> tuple[npt.NDArray, None]:
+    def reset(
+        self, seed: int | None = None, options: dict | None = None
+    ) -> tuple[npt.NDArray, None]:
         # Reset environment from main thread.
         self._reset_world.call(Empty.Request())
         with self._lock:
             self._collided = False
-        return self._get_obs(), None
+        return self._get_obs(), {}
 
-    def step(self, action: tuple[float, float, float]) -> tuple[npt.NDArray, int, bool, bool, None]:
+    def step(
+        self, action: tuple[float, float, float]
+    ) -> tuple[npt.NDArray, float, bool, bool, None]:
         # Convert tuple to twist.
         action_msg: Twist = Twist()
         action_msg.linear.x = float(action[0])
-        action_msg.linear.y = float(action[1])
-        action_msg.angular.z = float(action[2])
+        action_msg.angular.z = float(action[1])
 
         # Step environment from main thread.
         self._vel_cmd.publish(action_msg)
-        reward: int = 1
+        obs: npt.NDArray = self._get_obs()
+        reward: float = np.abs(obs[7])
         terminated: bool = False
         with self._lock:
             if self._collided:
                 reward = -100
                 terminated = True
-        return self._get_obs(), reward, terminated, False, None
-
-
-def main():
-    ge = GazeboEnv()
-    while True:
-        _, _, term, _, _ = ge.step((1, 0, 0))
-        print(term)
-        time.sleep(1)
-        if term:
-            ge.reset()
-
-if __name__ == "__main__":
-    main()
-
+        return obs, reward, terminated, False, {}
