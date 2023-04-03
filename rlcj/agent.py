@@ -28,7 +28,7 @@ def main():
     algorithm = os.getenv("RLCJ_ALGORITHM")
     output_path = os.getenv("RLCJ_OUTPUT_PATH", "/tmp/rl_out")
     checkpoint_frequency = os.getenv("RLCJ_CHECKPOINT_FREQUENCY", 1000)
-    timesteps = os.getenv("RLCJ_CHECKPOINT_FREQUENCY", 1000000)
+    timesteps = os.getenv("RLCJ_TIMESTEPS", 1000000)
 
     logger = configure(output_path, ["stdout", "log", "csv"])
     checkpoint_callback = CheckpointCallback(
