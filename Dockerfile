@@ -21,6 +21,9 @@ RUN source /opt/ros/${ROS_DISTRO}/setup.bash \
 COPY requirements.txt src/rlcj/requirements.txt
 RUN pip3 install -r src/rlcj/requirements.txt
 
+# Fix outdated dependencies issue.
+RUN pip3 install --upgrade --no-deps --force-reinstall numpy python-dateutil
+
 # Override Jackal xacro and world sdf and build Jackal packages.
 COPY jackal_custom.urdf.xacro src/jackal/jackal_description/urdf/jackal.urdf.xacro
 COPY jackal_race_custom.world src/jackal_simulator/jackal_gazebo/worlds/jackal_race.world
