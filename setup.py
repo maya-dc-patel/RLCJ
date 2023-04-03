@@ -13,7 +13,7 @@ setup(
         ("share/" + package_name, ["package.xml"]),
         (os.path.join("share", package_name), glob("launch/*launch.[pxy][yma]*")),
     ],
-    install_requires=["setuptools"],
+    install_requires=["setuptools", "stable_baselines3>=2.0.0a1"],
     zip_safe=True,
     maintainer="root",
     maintainer_email="root@todo.todo",
@@ -21,6 +21,6 @@ setup(
     license="TODO: License declaration",
     tests_require=[],
     entry_points={
-        "console_scripts": ["gazebo_env = rlcj.gazebo_env:main"],
+        "console_scripts": ["ppo = rlcj.ppo:main"],
     },
 )

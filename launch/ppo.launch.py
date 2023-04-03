@@ -14,8 +14,8 @@ def generate_launch_description():
     env = Node(
         package="rlcj",
         namespace="rlcj",
-        executable="gazebo_env",
-        name="gazebo_env",
+        executable="ppo",
+        name="ppo",
     )
     return LaunchDescription(
         [
