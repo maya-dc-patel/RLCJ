@@ -14,8 +14,9 @@ def generate_launch_description():
     env = Node(
         package="rlcj",
         namespace="rlcj",
-        executable="ppo",
-        name="ppo",
+        executable="agent",
+        name="agent",
+        output="screen",
     )
     return LaunchDescription(
         [

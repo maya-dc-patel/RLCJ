@@ -21,6 +21,6 @@ setup(
     license="TODO: License declaration",
     tests_require=[],
     entry_points={
-        "console_scripts": ["ppo = rlcj.ppo:main"],
+        "console_scripts": ["agent = rlcj.agent:main"],
     },
 )

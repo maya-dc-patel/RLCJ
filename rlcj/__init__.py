@@ -1,7 +1,7 @@
 from gymnasium.envs.registration import register
-from .gazebo_env import GazeboEnv
+from rlcj.gazebo_env import GazeboEnv
 
 register(
      id="rlcj",
-     entry_point="gazebo_env:GazeboEnv"
+     entry_point="rlcj.gazebo_env:GazeboEnv"
 )

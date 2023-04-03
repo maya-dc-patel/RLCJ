@@ -5,7 +5,6 @@ import numpy.typing as npt
 import threading
 
 import rclpy
-from rclpy.callback_groups import MutuallyExclusiveCallbackGroup
 from rclpy.node import Node
 from gazebo_msgs.msg import ContactsState
 from geometry_msgs.msg import Twist
