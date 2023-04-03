@@ -1,0 +1,20 @@
+services:
+  a2c:
+    image: rlcj
+    environment:
+      - RLCJ_ALGORITHM=A2C
+    volumes:
+      - /tmp/a2c_out:/tmp/rl_out
+  ppo:
+    image: rlcj
+    environment:
+      - RLCJ_ALGORITHM=PPO
+    volumes:
+      - /tmp/ppo_out:/tmp/rl_out
+  td3:
+    image: rlcj
+    environment:
+      - RLCJ_ALGORITHM=TD3
+    volumes:
+      - /tmp/td3_out:/tmp/rl_out
+  

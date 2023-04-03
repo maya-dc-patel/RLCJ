@@ -25,11 +25,14 @@ RUN pip3 install -r src/rlcj/requirements.txt
 COPY jackal_custom.urdf.xacro src/jackal/jackal_description/urdf/jackal.urdf.xacro
 COPY jackal_race_custom.world src/jackal_simulator/jackal_gazebo/worlds/jackal_race.world
 RUN source /opt/ros/${ROS_DISTRO}/setup.bash \
-    && colcon build \
-    && source install/setup.sh
+    && colcon build
 
 # Install rlcj.
 COPY . src/rlcj
-RUN pip3 install -e src/rlcj
+RUN source /opt/ros/${ROS_DISTRO}/setup.bash \
+    && colcon build
+RUN pip3 install -e src/rlcj \
+    && chmod +x src/rlcj/ros_entrypoint.sh
 
 ENTRYPOINT ["/opt/ros2_ws/src/rlcj/ros_entrypoint.sh"]
+CMD ["ros2", "launch", "rlcj", "agent.launch.py"]
