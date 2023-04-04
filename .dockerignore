@@ -2,5 +2,6 @@
 .gitignore
 Dockerfile
 .dockerignore
+output
 LICENSE
 README.md

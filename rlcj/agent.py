@@ -3,6 +3,7 @@ import gymnasium as gym
 import os
 from stable_baselines3 import A2C, PPO, TD3
 from stable_baselines3.common.base_class import BaseAlgorithm
+from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.callbacks import CheckpointCallback
 from stable_baselines3.common.logger import configure
 
@@ -39,7 +40,7 @@ def main():
         save_vecnormalize=True,
     )
 
-    env = gym.make("rlcj")
+    env = make_vec_env("rlcj", n_envs=1)
     model = get_model(algorithm, env)
     model.set_logger(logger)
     model.learn(total_timesteps=timesteps, callback=checkpoint_callback)
