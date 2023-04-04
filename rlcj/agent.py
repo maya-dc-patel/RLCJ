@@ -28,8 +28,8 @@ def get_model(algorithm: str | None, env: gym.Env) -> BaseAlgorithm:
 def main():
     algorithm = os.getenv("RLCJ_ALGORITHM")
     output_path = os.getenv("RLCJ_OUTPUT_PATH", "/tmp/rl_out")
-    checkpoint_frequency = os.getenv("RLCJ_CHECKPOINT_FREQUENCY", 1000)
-    timesteps = os.getenv("RLCJ_TIMESTEPS", 1000000)
+    checkpoint_frequency = int(os.getenv("RLCJ_CHECKPOINT_FREQUENCY", 1000))
+    timesteps = int(os.getenv("RLCJ_TIMESTEPS", 1000000))
 
     logger = configure(output_path, ["stdout", "log", "csv"])
     checkpoint_callback = CheckpointCallback(
