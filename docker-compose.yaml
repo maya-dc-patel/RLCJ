@@ -4,7 +4,7 @@ services:
     environment:
       - RLCJ_ALGORITHM=A2C
       # - RLCJ_OUTPUT_PATH=/tmp/rl_out
-      # - RLCJ_CHECKPOINT_FREQUENCY=1000
+      # - RLCJ_CHECKPOINT_FREQUENCY=100000
       # - RLCJ_TIMESTEPS=1000000
     volumes:
       - ./output/a2c:/tmp/rl_out
@@ -13,7 +13,7 @@ services:
     environment:
       - RLCJ_ALGORITHM=PPO
       # - RLCJ_OUTPUT_PATH=/tmp/rl_out
-      # - RLCJ_CHECKPOINT_FREQUENCY=1000
+      # - RLCJ_CHECKPOINT_FREQUENCY=100000
       # - RLCJ_TIMESTEPS=1000000
     volumes:
       - ./output/ppo:/tmp/rl_out
@@ -22,7 +22,7 @@ services:
     environment:
       - RLCJ_ALGORITHM=TD3
       # - RLCJ_OUTPUT_PATH=/tmp/rl_out
-      # - RLCJ_CHECKPOINT_FREQUENCY=1000
+      # - RLCJ_CHECKPOINT_FREQUENCY=100000
       # - RLCJ_TIMESTEPS=1000000
     volumes:
       - ./output/td3:/tmp/rl_out
