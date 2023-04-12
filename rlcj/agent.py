@@ -1,7 +1,7 @@
 from __future__ import annotations
 import gymnasium as gym
 import os
-from stable_baselines3 import A2C, PPO, TD3
+from stable_baselines3 import A2C, DDPG, PPO, SAC, TD3
 from stable_baselines3.common.base_class import BaseAlgorithm
 from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.callbacks import CheckpointCallback
@@ -12,10 +12,14 @@ def get_model(algorithm: str | None, env: gym.Env) -> BaseAlgorithm:
     model = None
     if algorithm is not None:
         algorithm = algorithm.upper().strip()
-        if algorithm == "PPO":
-            model = PPO("MlpPolicy", env)
-        elif algorithm == "A2C":
+        if algorithm == "A2C":
             model = A2C("MlpPolicy", env)
+        elif algorithm == "DDPG":
+            model = DDPG("MlpPolicy", env)
+        elif algorithm == "PPO":
+            model = PPO("MlpPolicy", env)
+        elif algorithm == "SAC":
+            model = SAC("MlpPolicy", env)
         elif algorithm == "TD3":
             model = TD3("MlpPolicy", env)
 
