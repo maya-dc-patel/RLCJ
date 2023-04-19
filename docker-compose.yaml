@@ -8,6 +8,15 @@ services:
       # - RLCJ_TIMESTEPS=1000000
     volumes:
       - ./output/a2c:/tmp/rl_out
+  ddpg:
+    image: rlcj
+    environment:
+      - RLCJ_ALGORITHM=DDPG
+      # - RLCJ_OUTPUT_PATH=/tmp/rl_out
+      # - RLCJ_CHECKPOINT_FREQUENCY=100000
+      # - RLCJ_TIMESTEPS=1000000
+    volumes:
+      - ./output/ddpg:/tmp/rl_out
   ppo:
     image: rlcj
     environment:
@@ -17,6 +26,15 @@ services:
       # - RLCJ_TIMESTEPS=1000000
     volumes:
       - ./output/ppo:/tmp/rl_out
+  sac:
+    image: rlcj
+    environment:
+      - RLCJ_ALGORITHM=SAC
+      # - RLCJ_OUTPUT_PATH=/tmp/rl_out
+      # - RLCJ_CHECKPOINT_FREQUENCY=100000
+      # - RLCJ_TIMESTEPS=1000000
+    volumes:
+      - ./output/sac:/tmp/rl_out
   td3:
     image: rlcj
     environment:
